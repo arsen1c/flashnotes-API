@@ -14,7 +14,7 @@ const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-	console.log('DB Connected...');
+  console.log('DB Connected...');
 });
 
 app.use(function(req, res, next) {

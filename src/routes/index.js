@@ -11,6 +11,13 @@ import {
 } from '../controllers';
 import auth from '../middlewares/auth';
 
+router.get('/', (req, res) => {
+	res.send({
+		status: 'Success',
+		message: 'Hello World!',
+		version: '1.0.0'
+	})
+})
 router.post('/register', registerController.register);
 router.post('/login', loginController.login);
 router.post('/notes', auth, notesController.add);
