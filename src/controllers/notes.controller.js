@@ -20,7 +20,7 @@ const notesController = {
 	},
 	async listAllNotes(req, res, next) {
 		try {
-			const user = await User.findOne({ _id: req.user._id }).select('notes');
+			const user = await User.findOne({ _id: req.user._id }).select('username notes');
 
 			if (!user){
 				return next(CustomErrorHandler.unAuthorized());
