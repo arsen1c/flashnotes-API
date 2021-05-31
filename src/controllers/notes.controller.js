@@ -71,7 +71,7 @@ const notesController = {
 					if(err) {
 						return next(new Error('Error Updating the user!'));
 					}
-					console.log('Success!', doc);
+					// console.log('Success!', doc);
 					res.status(201).json({message: 'Sucess!', data: doc.notes});		
 			})
 		} catch (err) {
