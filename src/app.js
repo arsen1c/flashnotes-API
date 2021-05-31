@@ -19,6 +19,7 @@ db.once('open', () => {
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", 'https://arsenic-todo.vercel.app');
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000")
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Content-Type', 'application/json;charset=UTF-8')
@@ -29,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(cors(
   {
-    origin: 'https://arsenic-todo.vercel.app',
+    origin: ['https://arsenic-todo.vercel.app', 'http://localhost:3000'],
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
 ));
