@@ -24,6 +24,7 @@ router.post('/notes', auth, notesController.add);
 router.get('/me', auth, userController.me);
 router.get('/refresh', refreshController.refresh);
 router.get('/notes', auth, notesController.listAllNotes);
+router.put('/notes/:id', auth, notesController.update);
 router.delete('/notes/:id', auth, notesController.delete);
 
 export default router;

@@ -37,7 +37,7 @@ const notesController = {
 			const user = await User.findOne({ _id: req.user._id });
 			if (!user) {
 				return next(CustomErrorHandler.unAuthorized());
-			}
+			};
 
 			const deleted = user.notes.map((item, index) => {
 				if (item.id === parseInt(id)) {
@@ -54,6 +54,29 @@ const notesController = {
 		} catch (err) {
 			return next(err);
 		}
+	},
+	async update(req, res, next){
+		try {
+			const id = req.params.id;
+			// console.log(req.body);
+			const { title, description } = req.body;
+
+			User.findOneAndUpdate({ 
+				_id: req.user._id, "notes.id": parseInt(id) }, 
+				{$set: { 
+					"notes.$.title": title, 
+					"notes.$.description": description 
+				}}, 
+				{new: true}, (err, doc) => {
+					if(err) {
+						return next(new Error('Error Updating the user!'));
+					}
+					console.log('Success!', doc);
+					res.status(201).json({message: 'Sucess!', data: doc.notes});		
+			})
+		} catch (err) {
+			console.log(err);
+		}	
 	}
 }
 
