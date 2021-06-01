@@ -1,6 +1,7 @@
 import { DEBUG_MODE } from '../config';
 import { ValidationError } from 'joi';
 import CustomErrorHandler from '../services/CustomErrorHandler';
+import mongoose from 'mongoose';
 
 const errorHandler = (err, req, res, next) => {
 	let statusCode = 500;
@@ -22,6 +23,14 @@ const errorHandler = (err, req, res, next) => {
 			message: err.message
 		};
 	};
+
+	// Unique username in mongodb
+	if (err.code === 11000) {
+		statusCode = 400,
+		data = {
+			message: 'Username is taken'
+		}
+	}
 
 	return res.status(statusCode).json(data);
 }

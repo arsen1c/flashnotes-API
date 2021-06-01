@@ -3,6 +3,7 @@ import { User } from '../../models';
 import bcrypt from 'bcrypt';
 import CustomErrorHandler from '../../services/CustomErrorHandler';
 import {JwtService} from '../../services';
+import mongoose from 'mongoose';
 // import { REFRESH_SECRET } from '../../config';
 
 const registerController = {
@@ -13,7 +14,8 @@ const registerController = {
 			username: Joi.string().min(3).max(30).required(),
 			email: Joi.string().email().required(),
 			password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
-			repeat_password: Joi.ref('password')
+			repeat_password: Joi.ref('password'),
+			date: Joi.date().required()
 		});
 
 		const { error } = registerSchema.validate(req.body);
@@ -31,7 +33,7 @@ const registerController = {
 		} catch (err) {
 			return next(err)
 		}
-		const { username, email, password } = req.body;
+		const { username, email, password, date } = req.body;
 
 		const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -39,14 +41,19 @@ const registerController = {
 		const user = new User({
 			username, 
 			email,
-			password: hashedPassword
+			password: hashedPassword,
+			date: new Date(date).toUTCString()
 		});
 
+		const err = await user.validateSync();
+		if (err) {
+			return next(err);
+		}
+		
 		let accessToken;
 
 		try {
 			const result = await user.save();
-			console.log('Success:', result);
 			// accessToken = JwtService.sign({ _id: result.id, username: result.username });
 		} catch (err) {
 			return next(err);

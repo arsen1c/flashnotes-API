@@ -6,11 +6,12 @@ const notesController = {
 	async add (req, res, next) {
 		try {
 			const user = await User.findOne({ _id: req.user._id });
-
+			// Convert Date
+			const date = new Date(req.body.date).toUTCString();
 			if (!user) {
 				return next(CustomErrorHandler.unAuthorized());
 			};
-			const { id, title, description, date } = req.body;
+			const { id, title, description } = req.body;
 			user.notes.push({ id, title, description, date });
 			await user.save();
 			res.json({ message: 'Note Saved!' });
