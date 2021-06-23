@@ -7,7 +7,6 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
 const app = express();
-app.use(cookieParser());
 
 mongoose.connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, 'useCreateIndex': true });
 const db = mongoose.connection;
@@ -34,6 +33,8 @@ app.use(cors(
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
 ));
+app.use(cookieParser());
+
 
 app.use('/api', routes);
 
