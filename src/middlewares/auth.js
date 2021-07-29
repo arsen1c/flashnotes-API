@@ -1,12 +1,8 @@
 import { CustomErrorHandler, JwtService } from '../services';
 
 const auth = async (req, res, next) => {
-	// Get authorization header
-	let authHeader = req.headers.authorization;
-
-
 	// Get the token from query or header
-	const token =  authHeader.split(' ')[1];
+	const token =  req.cookies.jwt;
 	// console.log("Token:",token);
 	if (!token) {
 		return next(CustomErrorHandler.unAuthorized());
