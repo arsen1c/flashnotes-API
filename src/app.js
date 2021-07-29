@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(cors(
   {
-    origin: ['https://flashnotes.vercel.app'],
+      origin: ['https://flashnotes.vercel.app', 'http://localhost:3000'],
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
 ));

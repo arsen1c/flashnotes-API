@@ -6,7 +6,7 @@ import { REFRESH_SECRET } from '../../config';
 
 const loginController = {
 	async login(req, res, next) {
-		const maxAge = 3 * 24 * 60 * 60; // 3 days in seconds
+		const maxAge = 7 * 24 * 60 * 60; // 7 days in seconds
 		// Validation of form input
 		const loginSchema = Joi.object({
 			email: Joi.string().email().required(),
@@ -38,7 +38,7 @@ const loginController = {
 
 			// Database whitelist
 			await RefreshToken.create({ token: refreshToken });
-			res.cookie('jwt', accessToken, { httpOnly: false, maxAge: maxAge * 1000});
+			res.cookie('jwt', accessToken, { httpOnly: true, maxAge: maxAge * 1000});
 			res.status(201).json({ accessToken, refreshToken });
 		} catch (err) {
 			return next(err);
