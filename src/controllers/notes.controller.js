@@ -35,6 +35,7 @@ const notesController = {
 	async delete(req, res, next) {
 		try {
 			const id = req.params.id;
+			console.log(id);
 			const user = await User.findOne({ _id: req.user._id });
 			if (!user) {
 				return next(CustomErrorHandler.unAuthorized());
