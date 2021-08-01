@@ -9,7 +9,12 @@ import cors from 'cors';
 const app = express();
 app.use(cookieParser());
 
-mongoose.connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, 'useCreateIndex': true });
+mongoose.connect(DB_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+});
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -17,24 +22,28 @@ db.once('open', () => {
   console.log('DB Connected...');
 });
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Credentials', true);
-  res.header("Access-Control-Allow-Origin", 'https://flashnotes.vercel.app');
-  res.header("Access-Control-Allow-Origin", 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', 'https://flashnotes.vercel.app');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.header('Content-Type', 'application/json;charset=UTF-8')
+  res.header('Content-Type', 'application/json;charset=UTF-8');
 
   next();
 });
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
-app.use(cors(
-  {
-    credentials: true, 
-    origin: ['https://flashnotes.vercel.app', 'http://localhost:3000', 'https://hoppscotch.io'],
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-  }
-));
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    credentials: true,
+    origin: [
+      'https://flashnotes.vercel.app',
+      'http://localhost:3000',
+      'https://hoppscotch.io',
+    ],
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  })
+);
 
 app.use('/api', routes);
 
