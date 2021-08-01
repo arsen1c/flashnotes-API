@@ -4,12 +4,16 @@ import bcrypt from 'bcrypt';
 import CustomErrorHandler from '../../services/CustomErrorHandler';
 import { JwtService } from '../../services';
 import mongoose from 'mongoose';
-// import { REFRESH_SECRET } from '../../config';
 
 const registerController = {
-  // POST to Register
+  /**
+   * @method {post} 
+   * This method is used to register a user on the app
+   * This method first validates the form input and look for errors.
+   * If no errors found, then it gets the email from the form and query the DB for that email.
+   * If that email does not exists, then I proceds further to register the use else throws an error
+   * */
   async register(req, res, next) {
-    // Validate Input
     const registerSchema = Joi.object({
       username: Joi.string().min(3).max(30).required(),
       email: Joi.string().email().required(),
@@ -26,9 +30,9 @@ const registerController = {
       return next(error);
     }
 
-    // Check if email exists
     try {
       const exists = await User.exists({ email: req.body.email });
+      // if email exists in the DB
       if (exists) {
         return next(
           CustomErrorHandler.alreadyExists('That email is already registered!')
@@ -39,9 +43,9 @@ const registerController = {
     }
     const { username, email, password, date } = req.body;
 
+    // hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Prepare the model
     const user = new User({
       username,
       email,
@@ -54,16 +58,12 @@ const registerController = {
       return next(err);
     }
 
-    let accessToken;
-
     try {
       const result = await user.save();
-      // accessToken = JwtService.sign({ _id: result.id, username: result.username });
     } catch (err) {
       return next(err);
     }
     res.json({ message: 'User Saved!' });
-    // res.json({ 'access_token': accessToken });
   },
 };
 

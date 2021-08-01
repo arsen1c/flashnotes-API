@@ -3,22 +3,37 @@ import { CustomErrorHandler } from '../services';
 import Joi from 'joi';
 
 const notesController = {
+  /**
+   * @method {post}
+   * Save new note to the database
+   * */
   async add(req, res, next) {
     try {
       const user = await User.findOne({ _id: req.user._id });
-      // Convert Date
+      // convert data string to UTC
       const date = new Date(req.body.date).toUTCString();
+      
       if (!user) {
         return next(CustomErrorHandler.unAuthorized());
       }
+
       const { id, title, description } = req.body;
+
+      // add new note to the array of notes of the user
       user.notes.push({ id, title, description, date });
+
       await user.save();
+
       res.json({ message: 'Note Saved!' });
     } catch (err) {
       return next(err);
     }
   },
+
+  /**
+   * @method {get}
+   * This method lists all the notes created by a particular user.
+   * */
   async listAllNotes(req, res, next) {
     try {
       const user = await User.findOne({ _id: req.user._id }).select(
@@ -34,15 +49,22 @@ const notesController = {
       return next(err);
     }
   },
+
+  /**
+   * @method {delete}
+   * This method delets a note of  a particular user
+   * */
   async delete(req, res, next) {
     try {
-      const id = req.params.id;
-      // console.log(id);
+      const id = req.params.id; // note id
+
       const user = await User.findOne({ _id: req.user._id });
+
       if (!user) {
         return next(CustomErrorHandler.unAuthorized());
       }
 
+      // return the deleted note
       const deleted = user.notes.map((item, index) => {
         if (item.id === parseInt(id)) {
           user.notes.splice(index, 1);
@@ -59,10 +81,15 @@ const notesController = {
       return next(err);
     }
   },
+
+  /**
+   * @method {put}
+   * Updates a note
+   * */
   async update(req, res, next) {
     try {
-      const id = req.params.id;
-      // console.log(req.body);
+      const id = req.params.id; // note id
+
       const { title, description } = req.body;
 
       User.findOneAndUpdate(
@@ -81,12 +108,12 @@ const notesController = {
           if (err) {
             return next(new Error('Error Updating the user!'));
           }
-          // console.log('Success!', doc);
+
           res.status(201).json({ message: 'Sucess!', data: doc.notes });
         }
       );
     } catch (err) {
-      console.log(err);
+      next(err);
     }
   },
 };

@@ -39,7 +39,6 @@ app.use(
     origin: [
       'https://flashnotes.vercel.app',
       'http://localhost:3000',
-      'https://hoppscotch.io',
     ],
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
   })
