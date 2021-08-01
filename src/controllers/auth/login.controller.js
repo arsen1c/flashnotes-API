@@ -39,6 +39,7 @@ const loginController = {
 			// Database whitelist
 			await RefreshToken.create({ token: refreshToken });
 			res.cookie('jwt', accessToken, { httpOnly: false, maxAge: maxAge * 1000, sameSite: 'none', secure: true, path: '/'});
+			// res.cookie('jwt', accessToken, { httpOnly: false, maxAge: maxAge * 1000, sameSite: 'none', secure: true, path: '/'});
 			res.status(201).json({ accessToken, refreshToken });
 		} catch (err) {
 			return next(err);
