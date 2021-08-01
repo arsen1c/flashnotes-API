@@ -32,6 +32,7 @@ const errorHandler = (err, req, res, next) => {
 		}
 	}
 
+	console.log(err.message);
 	return res.status(statusCode).json(data);
 }
 
