@@ -6,7 +6,6 @@ import {
   registerController,
   loginController,
   userController,
-  refreshController,
   notesController,
 } from '../controllers';
 import auth from '../middlewares/auth';

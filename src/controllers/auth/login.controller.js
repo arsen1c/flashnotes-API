@@ -13,7 +13,7 @@ const loginController = {
    * and access token and set that access token in the cookies with a max age.
    * */
   async login(req, res, next) {
-    const maxAge = 7 * 24 * 60 * 60; // 7 days in seconds
+    const maxAge = 30 * 24 * 60 * 60; // 30 days in seconds
     
     const loginSchema = Joi.object({
       email: Joi.string().email().required(),
