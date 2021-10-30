@@ -157,15 +157,66 @@ const notesController = {
 
   async getNote(req, res, next) {
     try {
-      const username = req.params.username;
-      const link = req.params.link;
+      const { password } = req.body;
+      const { username, link } = req.params;
 
-      console.log(username,link);
+      console.log(username, link, password);
 
       const user = await User.findOne({ username });
       const post = user.notes.filter(note => note.sharelink === link);
 
+      if (!password && post[0].password.length > 0) {
+        return res.json({msg: "Password Required"});
+      }
+
       res.send(post);
+
+    } catch (err) {
+      next(err);
+    }
+  },
+  async postGetNote(req, res, next) {
+    try {
+      const { password } = req.body;
+      const { username, link } = req.params;
+
+      const user = await User.findOne({ username });
+      const post = user.notes.filter(note => note.sharelink === link);
+
+      if (password === post[0].password) {
+        return res.send(post);
+      }
+
+      throw new Error("Password didnt match");
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async newpass(req, res, next) {
+    try {
+      const id = req.params.id; // note id
+      const { newpassword } = req.body;
+
+      User.findOneAndUpdate(
+        {
+          _id: req.user._id,
+          'notes.id': parseInt(id),
+        },
+        {
+          $set: {
+            'notes.$.password': newpassword,
+          },
+        },
+        { new: true },
+        (err, doc) => {
+          if (err) {
+            return next(new Error('Error Updating the password!'));
+          }
+
+          res.status(201).json({ message: 'Sucess!', data: doc.notes });
+        }
+      );
     } catch (err) {
       next(err);
     }
