@@ -24,5 +24,9 @@ router.get('/me', auth, userController.me);
 router.get('/notes', auth, notesController.listAllNotes);
 router.put('/notes/:id', auth, notesController.update);
 router.delete('/notes/:id', auth, notesController.delete);
+router.get('/generateLink/:id', auth, notesController.generateLink);
+router.get('/:username/:link', notesController.getNote);
 
+// Development
+router.get('/all', notesController.all);
 export default router;

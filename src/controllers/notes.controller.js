@@ -1,6 +1,7 @@
 import { User } from '../models';
 import { CustomErrorHandler } from '../services';
 import Joi from 'joi';
+import { nanoid } from 'nanoid'; 
 
 const notesController = {
   /**
@@ -116,6 +117,59 @@ const notesController = {
       next(err);
     }
   },
+
+  async all(req, res, next) {
+    const user = await User.find();
+    res.send(user);
+  },
+
+  /**
+   * Generate a new shareable link for a post
+  */
+  async generateLink(req, res, next) {
+    try {
+      const id = req.params.id; // note id
+      const shareableLink = nanoid();
+
+      User.findOneAndUpdate(
+        {
+          _id: req.user._id,
+          'notes.id': parseInt(id),
+        },
+        {
+          $set: {
+            'notes.$.sharelink': shareableLink
+          },
+        },
+        { new: true },
+        (err, doc) => {
+          if (err) {
+            return next(new Error('Error Updating shareable link!'));
+          }
+
+          res.status(201).json({ id: shareableLink });
+        }
+      );
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async getNote(req, res, next) {
+    try {
+      const username = req.params.username;
+      const link = req.params.link;
+
+      console.log(username,link);
+
+      const user = await User.findOne({ username });
+      const post = user.notes.filter(note => note.sharelink === link);
+
+      res.send(post);
+    } catch (err) {
+      next(err);
+    }
+  }
 };
 
 export default notesController;
