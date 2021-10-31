@@ -160,12 +160,10 @@ const notesController = {
       const { password } = req.body;
       const { username, link } = req.params;
 
-      console.log(username, link, password);
-
       const user = await User.findOne({ username });
       const post = user.notes.filter(note => note.sharelink === link);
 
-      if (!password && post[0].password.length > 0) {
+      if (!password && post[0].password) {
         return res.json({msg: "Password Required"});
       }
 
